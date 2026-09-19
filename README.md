@@ -2,7 +2,7 @@
 🌐 Canlı Önizleme
 Projeyi internet üzerinden hemen incelemek için:
 
-👉 Canlı Siteye Git
+👉 Canlı Siteye Git https://selimuysal.github.io/kuran-ezber/
 
 Quranic Interactive Analysis & Audio Player Web App
 
