@@ -1,93 +1,66 @@
-# 📖 Kuran Ezber Projesi
-##  Canlı Önizleme
-Projeyi internet üzerinden hemen incelemek için tıklayın:
-👉 [Canlı Siteye Git](https://selimuysal.github.io/kuran-ezber/)
-📖 Kur’an Ezber Projesi
-🌐 Canlı Önizleme
-
-Projeyi internet üzerinden hemen incelemek için:
-
-👉 Canlı Siteye Git
-
 Quranic Interactive Analysis & Audio Player Web App
 
-Modern ve duyarlı bir web uygulaması olan bu proje; interaktif Kur’an okuma, kelime bazlı seçim, özelleştirilebilir ses oynatma kontrolleri ve Google Gemini AI destekli gelişmiş dilbilimsel analiz özellikleri sunar.
+A modern, highly responsive web application built with vanilla JavaScript and Tailwind CSS, designed for interactive Quran reading, word-by-word selections, custom audio playback controls, and advanced linguistic analysis powered by Google's Gemini AI.
 
-🌟 Proje Özellikleri
-📝 Gelişmiş Metin ve Kelime Seçimi (selection.js)
+🌟 Proje Özellikleri (Core Features)
 
-Fareyle sürükleyerek kelime aralığı seçme (drag selection).
+Gelişmiş Metin ve Kelime Seçimi (selection.js):
 
-Shift + Click ile iki kelime arasındaki aralığı seçme.
+Fareyle sürükleme (drag-and-selection), Shift+Click ile çoklu kelime aralığı seçimi ve sağ tık bağlam menüsü (context menu) desteği.
 
-Sağ tık bağlam menüsü (context menu) desteği.
+Ayet numarasına tıklayarak tüm ayeti tek hamlede seçebilme.
 
-Ayet numarasına tıklayarak ayetin tamamını tek seferde seçebilme.
+Boş alanlara tıklandığında (click-away) seçimi otomatik temizleme.
 
-Boş alana tıklandığında (click-away) mevcut seçimi otomatik olarak temizleme.
-
-🔊 Akıllı Ses ve Hız Kontrolleri (controls.js)
+Akıllı Ses ve Hız Kontrolleri (controls.js):
 
 0.5x ile 5.0x arasında dinamik oynatma hızı ayarı.
 
-Ön tanımlı hız butonları (preset buttons) ile hızlı geçiş.
+Ön tanımlı hız butonları (preset buttons) ile hızlı geçiş ve UI senkronizasyonu.
 
-Oynatma hızı ile arayüzün senkronize edilmesi.
+Döngü sayacı (loop counter) takibi.
 
-Döngü (loop) sayacının takibi.
+Yapay Zeka Destekli Derinlemesine Tahlil (geminiService.js & modal.js):
 
-🤖 Yapay Zekâ Destekli Derinlemesine Tahlil (geminiService.js & modal.js)
+Seçilen Arapça kelime grupları (terkipler) için Google Gemini modellerini yedekli olarak (GEMINI_MODELS) sorgulama.
 
-Seçilen Arapça kelime gruplarını (terkipleri) Google Gemini modellerine yedekli olarak gönderme.
+Bütüncül terkip anlamı, kelime bazlı kök ve gramer yapısı, tefsir bağlamı ve nüzul sebebi/teknik detayları JSON formatında otomatik alma ve modal üzerinde görselleştirme.
 
-Bütüncül terkip anlamı, kelime bazlı kök ve gramer yapısı, tefsir bağlamı ve nüzul sebebi gibi bilgileri JSON formatında alma.
+Dinamik Sûre ve Font Yönetimi (surahSelect.js & renderer.js):
 
-Yapay zekâ tarafından oluşturulan analiz sonuçlarını modal penceresinde görselleştirme.
+Sûre listesinin otomatik doldurulması ve Fâtiha sûresi özelinde Besmele yönetimi/temizliği (stripBismillah).
 
-Bir Gemini modelinde hata oluşması durumunda sonraki modele otomatik olarak geçme (fallback).
+Özelleştirilebilir Arapça font stilleri ve dinamik font boyutu yönetimi (--arabic-word-size).
 
-📚 Dinamik Sûre ve Font Yönetimi (surahSelect.js & renderer.js)
+📂 Mimari ve Modüler Yapı (Architecture)
 
-Sûre listesinin otomatik olarak oluşturulması.
-
-Fâtiha sûresine özel Besmele yönetimi ve temizliği (stripBismillah).
-
-Özelleştirilebilir Arapça yazı tipi stilleri.
-
-Dinamik Arapça font boyutu yönetimi (--arabic-word-size).
-
-📂 Mimari ve Modüler Yapı
-
-Proje, temiz kod (Clean Code) prensipleri gözetilerek ES6 modülleri şeklinde modüler bir yapıda tasarlanmıştır.
+Proje, temiz kod (clean code) prensipleri gözetilerek modüler ES6 modülleri şeklinde tasarlanmıştır:
 
 src/
 │
 ├── audio/
 │   └── player.js          # Ses oynatma ve hız yönetimi
-│
 ├── dom/
 │   └── elements.js        # DOM seçicileri ve element referansları
-│
 ├── ui/
-│   ├── controls.js        # Hız, font ve UI kontrol bağlantıları
+│   ├── controls.js        # Hız, font ve UI kontrol bağlamaları
 │   ├── modal.js           # Kelime tahlili ve AI modal arayüz yönetimi
-│   ├── renderer.js        # Ayet render etme, Besmele temizliği ve font yönetimi
-│   ├── selection.js       # Kelime seçim algoritmaları
+│   ├── renderer.js        # Ayet render etme, Besmele temizliği ve fontlar
+│   ├── selection.js       # Kelime seçim algoritmaları (Sürükleme, Shift+Click)
 │   └── surahSelect.js     # Sûre listesi ve seçici yönetimi
-│
 ├── services/
 │   └── geminiService.js   # Gemini AI API entegrasyonu ve prompt yönetimi
-│
 ├── data/
 │   └── surahs.js          # Sûre meta verileri
-│
 ├── state.js               # Global uygulama durumu (State)
-└── config.js              # API anahtarı ve endpoint yapılandırmaları
+└── config.js              # API anahtarları ve endpoint konfigürasyonları
 
-🔄 Sistem Akışları
-1. Yapay Zekâ ile Kelime Tahlili
 
-Kullanıcı arayüzde bir veya birden fazla kelime seçip detaylar penceresini açtığında ve AI analizi istediğinde aşağıdaki süreç çalışır:
+🔄 Sistem Akış Şemaları (System Workflows)
+
+1. Yapay Zeka Kelime Tahlil Akışı (Gemini AI Workflow)
+
+Kullanıcı arayüzde bir veya birden fazla kelime seçip detaylar penceresini açtığında ve AI analizi istediğinde şu süreç çalışır:
 
 sequenceDiagram
     participant User as Kullanıcı
@@ -95,65 +68,53 @@ sequenceDiagram
     participant Service as geminiService.js
     participant Gemini as Google Gemini API
 
-    User->>Modal: Kelime/Terkip seç ve "AI Tahlil İste" butonuna tıkla
+    User->>Modal: Kelime/Terlip Seç & "AI Tahlil İste" tıkla
     Modal->>Service: analyzeSelection(arabicText, translation, surahName)
     Service->>Service: buildPrompt() ile akademik prompt oluştur
     Service->>Gemini: HTTP POST (JSON Response Mode)
-
     alt Başarılı Yanıt
-        Gemini-->>Service: JSON verisi (terkip, kelime analizi, tefsir, nüzul)
-        Service-->>Modal: Veriyi döndür
-        Modal->>User: Modal içeriğini güncelle (renderAIResult)
+        Gemini-->>Service: JSON Verisi (Terkip, Kelime Analizi, Tefsir, Nüzul)
+        Service-->>Modal: Veriyi Dön
+        Modal->>User: Modal İçeriğini Güncelle (renderAIResult)
     else Hata / Model Hatası
         Gemini-->>Service: Hata / Timeout
         Service->>Service: Sonraki modeli dene (Fallback)
-        Service-->>Modal: Hata mesajı göster (renderAIError)
+        Service-->>Modal: Hata Mesajı Göster (renderAIError)
     end
 
-2. Kelime Seçim Mekanizması
-graph TD
-    A[Kullanıcı Mousedown / Sürükleme] --> B{Shift tuşuna basılı mı?}
-    B -- Evet --> C[handleShiftClick: İki nokta arasındaki aralığı seç]
-    B -- Hayır --> D{Sürükleme yapılıyor mu?}
-    D -- Evet --> E[setupDragSelection: Mouseover ile aralığı genişlet]
-    D -- Hayır --> F[Tekil kelime veya ayet rozeti seçimi]
 
-    C --> G[finalizeWordSelection: Segmentleri hesapla ve UI güncelle]
+2. Kelime Seçim Mekaniği (Selection Workflow)
+
+graph TD
+    A[Kullanıcı Mousedown / Sürükleme] --> B{Shift Tuşuna Basılı mı?}
+    B -- Evet --> C[handleShiftClick: İki nokta arası aralığı seç]
+    B -- Hayır --> D{Sürükleme (Drag) mi?}
+    D -- Evet --> E[setupDragSelection: Mouseover ile aralığı genişlet]
+    D -- Hayır --> F[Tekil Kelime veya Ayet Rozeti Seçimi]
+    C --> G[finalizeWordSelection: Segmentleri hesapla & UI Güncelle]
     E --> G
     F --> G
+    G --> H[Oynat/Tahlil Et butonlarını aktif et]
 
-    G --> H[Oynat / Tahlil Et butonlarını aktif et]
 
-🚀 Kurulum ve Başlangıç
-1. Projeyi Klonlayın
-git clone https://github.com/kullanici-adi/proje-adi.git
-cd proje-adi
+🚀 Kurulum ve Başlangıç (Getting Started)
 
-2. Gemini API Anahtarını Tanımlayın
+Projeyi klonlayın:
 
-src/config.js dosyasında API anahtarınızı tanımlayın:
+git clone https://github.com/kullanici adi/proje-adi.git
+
+
+src/config.js dosyası içerisinde Gemini API anahtarınızı tanımlayın:
 
 export const GEMINI_API_KEY = "BURAYA_API_ANAHTARINIZI_YAZIN";
 
 
-⚠️ Güvenlik Uyarısı: Bu proje frontend tabanlı ve GitHub Pages üzerinde çalışıyorsa API anahtarını doğrudan JavaScript dosyasına koymak anahtarın kullanıcılar tarafından görülebilmesine neden olabilir. Gerçek kullanımda API anahtarını istemci tarafında saklamak yerine bir backend/proxy üzerinden yönetmeniz önerilir.
-
-3. Projeyi Çalıştırın
-
-Projeyi modern bir tarayıcıda veya Live Server gibi bir yerel geliştirme sunucusu üzerinden çalıştırabilirsiniz.
+Projeyi modern bir tarayıcıda veya Live Server yardımıyla çalıştırın.
 
 🛠️ Kullanılan Teknolojiler
 
-Vanilla JavaScript — ES6 Modules
+Vanilla JavaScript (ES6 Modules)
 
-Tailwind CSS — Dinamik sınıf yönetimi ve modern kullanıcı arayüzü
+Tailwind CSS (Dinamik sınıf yönetimi ve modern UI tasarımı)
 
-Google Gemini API — Metin analizi ve filolojik/dilbilimsel tahlil
-
-GitHub Pages — Canlı yayınlama ve barındırma
-
-📌 Notlar
-
-Proje geliştirme sürecinde modülerlik, okunabilirlik ve sürdürülebilirlik ön planda tutulmuştur.
-
-AI tarafından üretilen dilbilimsel ve tefsir içerikleri yardımcı niteliktedir; akademik veya dinî çalışmalarda kullanılmadan önce güvenilir kaynaklarla ayrıca doğrulanmalıdır.
+Google Gemini API (Metin analizi ve filolojik tahlil)
