@@ -1,0 +1,53 @@
+/* Ayet kutusu */
+.verse-box {
+    background-color: #FAF6ED !important;
+    border: 1px solid #EFE7D8 !important;
+    padding: 1.75rem 1.25rem !important;
+    width: 100%;
+    border-radius: 10px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.verse-box:hover {
+    background-color: #F4EEDC !important;
+}
+
+/* Okunan ayet */
+.verse-box.active-verse-box {
+    background-color: #f0f4e6 !important;
+    border-color: #34A853 !important;
+}
+
+/* Kelime hücresi (font büyüdükçe orantılı genişler) */
+.word-span {
+    font-size: var(--arabic-word-size);
+    display: inline-block;
+    padding: 0.3em 0.25em;
+    margin: 0.35em 0.05em;
+    border-radius: 10px;
+    cursor: pointer;
+    vertical-align: middle;
+    line-height: 1.6;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.word-span:hover {
+    background-color: #ecfdf5;
+}
+
+/* Seçili kelime */
+.word-selected {
+    background-color: #d1fae5 !important;
+    color: #065f46 !important;
+    box-shadow: 0 0 0 1px #29e9a2;
+}
+
+/* Ses çalarken okunan kelime */
+.word-span.active-word {
+    background: #f8c600 !important;
+    color: #92400e !important;
+    transform: scale(0.99);
+    border-radius: 0.25em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    z-index: 10;
+}

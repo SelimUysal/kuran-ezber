@@ -1,0 +1,24 @@
+:root {
+    --arabic-word-size: 1.85rem;
+}
+
+#quran-container {
+    user-select: none;
+    width: 100%;
+    margin-inline: auto;
+}
+
+.dir-rtl {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Hat (yazı tipi) sınıfları */
+.font-arabic,
+.font-amiri        { font-family: 'Amiri', serif; }
+.font-scheherazade { font-family: 'Scheherazade New', serif; }
+.font-lateef       { font-family: 'Lateef', serif; }
+
+.font-arabic {
+    line-height: 2.8;
+}

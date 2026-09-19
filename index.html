@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kur'an Ezber Asistanı</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Lateef&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/verse.css">
+    <link rel="stylesheet" href="css/modal.css">
+</head>
+<body class="bg-[#FBF9F5] text-slate-800 min-h-screen flex flex-col font-sans">
+
+    <!-- Header -->
+    <header class="bg-emerald-700 text-white shadow-md py-4 px-6 sticky top-0 z-40">
+        <div class="max-w-[1400px] mx-auto flex justify-between items-center">
+            <h1>Kur'an Ezber Asistanı</h1>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-[1400px] mx-auto w-full flex-1 p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Sol Panel: Sure Metni (%75) -->
+        <section class="lg:col-span-8 xl:col-span-9 bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-3 border-b border-slate-100 gap-3">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-lg font-semibold text-slate-700">Sure Seç:</h2>
+                    <select id="surah-select" class="border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"></select>
+                </div>
+                <p class="text-xs text-slate-500">Kelimeleri sürükleyip seçin, sağ tıklayarak yapay zeka tahlilini açın.</p>
+            </div>
+
+            <!-- Yükleniyor Durumu -->
+            <div id="loading-spinner" class="py-12 flex flex-col items-center justify-center space-y-3">
+                <div class="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+                <p class="text-sm text-slate-500">Sure verileri API'den çekiliyor...</p>
+            </div>
+
+            <!-- Sabit Besmele Alanı -->
+            <div id="bismillah-box" class="hidden text-center py-4 mb-4 bg-emerald-50/50 rounded-xl border border-emerald-100">
+                <p id="bismillah-text" class="text-2xl md:text-3xl font-arabic text-emerald-800 tracking-wide font-amiri">
+                    بِسْمِ  ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
+                </p>
+            </div>
+
+            <!-- Ayetlerin Listesi -->
+            <div id="quran-container" class="hidden space-y-6 overflow-y-auto max-h-[72vh] pr-2 font-arabic text-right dir-rtl font-amiri">
+                <!-- JavaScript ile doldurulacak -->
+            </div>
+        </section>
+
+        <!-- Sağ Panel: Kontrol Mekanizması (%25) -->
+        <section class="lg:col-span-4 xl:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between h-fit sticky top-24">
+            <div>
+                <h2 class="text-lg font-semibold text-slate-700 mb-4 pb-3 border-b border-slate-100">Döngü ve Ses Kontrolü</h2>
+                
+                <!-- Hat (Yazı Tipi) Seçimi -->
+                <div class="mb-4">
+                    <label for="font-style-select" class="block text-sm font-medium text-slate-700 mb-1.5">Kur'an Hattı (Yazı Tipi):</label>
+                    <select id="font-style-select" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="font-amiri" selected>Amiri (Klasik Medine Hattı)</option>
+                        <option value="font-scheherazade">Scheherazade (Zarif Hat)</option>
+                        <option value="font-lateef">Lateef (Mushaf Hattı)</option>
+                    </select>
+                </div>
+
+                <!-- Hafız Seçimi -->
+                <div class="mb-4">
+                    <label for="reciter-select" class="block text-sm font-medium text-slate-700 mb-1.5">Hafız (Seslendirme):</label>
+                    <select id="reciter-select" class="w-full border border-slate-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="ar.alafasy" selected>Mishari Rashid Alafasy</option>
+                        <option value="ar.minshawi">Mohamed Siddiq al-Minshawi</option>
+                        <option value="ar.mahermuaiqly">Maher Al Muaiqly</option>
+                        <option value="ar.shaatree">Abu Bakr al-Shatri</option>
+                    </select>
+                </div>
+                
+                <!-- Seçim Bilgisi -->
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-5">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Seçili Aralık</span>
+                    <div id="selected-range-text" class="text-sm font-medium text-emerald-800">
+                        Henüz bir ayet veya kelime seçilmedi.
+                    </div>
+                </div>
+
+                <!-- Döngü Sayısı Seçimi -->
+                <div class="mb-5">
+                    <label for="loop-count" class="block text-sm font-medium text-slate-700 mb-2">Döngü Sayısı (Tekrar):</label>
+                    <select id="loop-count" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="1">1 Kez Oku (Tekrar Yok)</option>
+                        <option value="3" selected>3 Kez Tekrar Et</option>
+                        <option value="5">5 Kez Tekrar Et</option>
+                        <option value="10">10 Kez Tekrar Et</option>
+                        <option value="infinite">Sürekli Döngü (Sonsuz)</option>
+                    </select>
+                </div>
+
+                <!-- Metin Boyutu Slider Alanı -->
+                <div class="mb-5 bg-slate-50 border border-slate-200 rounded-xl p-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="font-size-range" class="text-sm font-medium text-slate-700">Ayet Yazı Boyutu:</label>
+                        <span id="font-size-display" class="text-sm font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">1.85rem</span>
+                    </div>
+
+                    <div class="relative flex items-center py-2">
+                        <input 
+                            type="range" 
+                            id="font-size-range" 
+                            min="1.2" 
+                            max="6.2" 
+                            step="0.05" 
+                            value="1.85" 
+                            class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 focus:outline-none"
+                        >
+                    </div>
+
+                    <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                        <span>Küçük</span>
+                        <span>Varsayılan</span>
+                        <span>Çok Büyük</span>
+                    </div>
+                </div>
+
+                <!-- Okuma Hızı Slider Alanı -->
+                <div class="mb-5 bg-slate-50 border border-slate-200 rounded-xl p-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="playback-speed-range" class="text-sm font-medium text-slate-700">Okuma Hızı:</label>
+                        <span id="speed-value-display" class="text-sm font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">1.0x</span>
+                    </div>
+
+                    <div class="relative flex items-center py-2">
+                        <input 
+                            type="range" 
+                            id="playback-speed-range" 
+                            min="0.5" 
+                            max="5.0" 
+                            step="0.25" 
+                            value="1.0" 
+                            class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 focus:outline-none"
+                        >
+                    </div>
+
+                    <div class="grid grid-cols-5 gap-1.5 mt-2">
+                        <button type="button" data-speed="1.0" class="speed-preset-btn text-[11px] py-1 bg-white border border-slate-200 rounded text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">1x</button>
+                        <button type="button" data-speed="1.5" class="speed-preset-btn text-[11px] py-1 bg-white border border-slate-200 rounded text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">1.5x</button>
+                        <button type="button" data-speed="2.0" class="speed-preset-btn text-[11px] py-1 bg-white border border-slate-200 rounded text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">2x</button>
+                        <button type="button" data-speed="3.0" class="speed-preset-btn text-[11px] py-1 bg-white border border-slate-200 rounded text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">3x</button>
+                        <button type="button" data-speed="5.0" class="speed-preset-btn text-[11px] py-1 bg-white border border-slate-200 rounded text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">5x</button>
+                    </div>
+                </div> 
+
+                <!-- Durum Bilgisi ve Döngü Sayacı -->
+                <div class="bg-emerald-50/70 border border-emerald-200 rounded-lg p-3 mb-5 flex justify-between items-center">
+                    <span class="text-xs font-semibold text-emerald-900">Mevcut Döngü:</span>
+                    <span id="current-loop-counter" class="text-sm font-bold text-emerald-700">0 / 0</span>
+                </div>
+
+                <!-- Oynat & Durdur Butonları -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="btn-play" disabled class="w-full py-3 bg-emerald-600 text-white font-semibold rounded-lg shadow-sm hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        Oynat
+                    </button>
+                    <button id="btn-stop" disabled class="w-full py-3 bg-rose-600 text-white font-semibold rounded-lg shadow-sm hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+                        Durdur
+                    </button>
+                    <button
+                        id="btn-play-surah"
+                        class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
+                        ▶ Tüm Sureyi Dinle
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Yapay Zeka Tefsir ve Kelime Analiz Modalı -->
+    <div id="detail-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 md:p-6 hidden">
+        <div class="bg-white rounded-3xl max-w-5xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-slate-100 flex flex-col">
+            
+            <!-- Modal Başlık -->
+            <div class="p-6 md:px-8 md:py-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur-md z-20">
+                <div>
+                    <h3 id="modal-verse-number" class="text-xl md:text-2xl font-bold text-slate-800">Mülk Suresi Analizi</h3>
+                    <p class="text-sm text-slate-500 mt-0.5">Anında Kelime Anlamı ve Tefsir Tahlili</p>
+                </div>
+                <button id="close-modal" class="text-slate-400 hover:text-slate-600 p-2.5 rounded-2xl hover:bg-slate-100 transition-colors">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Modal İçeriği -->
+            <div class="p-6 md:p-8 space-y-6">
+                
+                <!-- 1. Seçilen Arapça Metin -->
+                <div class="bg-emerald-50/70 rounded-2xl p-6 md:p-8 border border-emerald-100 flex flex-col items-center justify-center shadow-sm">
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 mb-3 bg-emerald-100/80 px-3 py-1 rounded-full">Seçilen Kelime / Ayet Metni</span>
+                    <div class="w-full py-2 flex justify-center">
+                        <p id="modal-selected-arabic" class="font-arabic text-3xl md:text-4xl text-emerald-950 dir-rtl leading-[2.2] text-center font-bold whitespace-normal break-words max-w-full px-2">
+                        </p>
+                    </div>
+                </div> 
+
+                <!-- 2. ANINDA GÖSTERİLEN KELİME KELİME ANLAMLARI -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 md:p-6">
+                    <div class="flex justify-between items-center mb-3 border-b border-slate-200/60 pb-2.5">
+                        <h4 class="text-sm font-bold text-emerald-800 uppercase tracking-wide flex items-center gap-2">
+                            <span>📖</span> Kelime Kelime Anlamı
+                        </h4>
+                        <span id="modal-wbw-count" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full hidden">
+                            0 Kelime
+                        </span>
+                    </div>
+
+                    <div id="modal-wbw-list" class="flex flex-wrap dir-rtl justify-start items-stretch gap-2.5 max-h-[320px] overflow-y-auto pr-1 pl-1 py-1 custom-scrollbar">
+                    </div>
+                </div>
+
+                <!-- 3. ANINDA GÖSTERİLEN BÜTÜNCÜL AYET MEALİ -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 md:p-6">
+                    <h4 class="text-sm font-bold text-slate-600 uppercase tracking-wide mb-2">Ayet Meali (Diyanet)</h4>
+                    <p id="modal-verse-translation" class="text-base md:text-lg text-slate-800 leading-relaxed font-medium"></p>
+                </div>
+
+                <!-- 4. Yapay Zeka Başlatma Butonu -->
+                <div id="ai-button-container">
+                    <button id="btn-fetch-ai" class="w-full py-4 px-6 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-base md:text-lg rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2">
+                        <span>✨ Yapay Zeka ile Derin Gramer ve Tefsir Analizi Yap</span>
+                    </button>
+                </div>
+
+                <!-- 5. Yükleniyor Göstergesi -->
+                <div id="ai-loading" class="py-10 text-center space-y-3 hidden">
+                    <div class="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                    <p class="text-base font-semibold text-slate-600">Gemini AI detaylı gramer ve tefsir analizini hazırlıyor...</p>
+                </div>
+
+                <!-- 6. AI Detaylı Analiz Sonuç Alanı -->
+                <div id="ai-content" class="space-y-5 hidden">
+                    <!-- Terkip Anlamı -->
+                    <div class="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-5 md:p-6">
+                        <h4 class="text-sm font-bold text-emerald-900 uppercase tracking-wide mb-2">İfade / Terkip Detaylı Anlamı</h4>
+                        <p id="modal-terkip-meaning" class="text-base md:text-lg font-medium text-slate-800 leading-relaxed"></p>
+                    </div>
+
+                    <!-- Kelime Kök ve Gramer Analiz Listesi -->
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-600 uppercase tracking-wide mb-3">Gemini Detaylı Gramer ve Kök Tahlili</h4>
+                        <div id="modal-word-breakdown" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                    </div>
+
+                    <!-- Tefsir Bağlamı -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 md:p-6">
+                        <h4 class="text-sm font-bold text-slate-600 uppercase tracking-wide mb-2">Tefsir Bağlamı ve Hikmeti</h4>
+                        <p id="modal-tafsir-context" class="text-base md:text-lg text-slate-700 leading-relaxed"></p>
+                    </div>
+
+                    <!-- Nüzul ve Teknik Detaylar -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 md:p-6">
+                        <h4 class="text-sm font-bold text-slate-600 uppercase tracking-wide mb-2">Nüzul Sebebi ve Arkaplan</h4>
+                        <p id="modal-nuzul-info" class="text-base md:text-lg text-slate-700 leading-relaxed"></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
