@@ -1,120 +1,51 @@
-📖 Kur’an Ezber Projesi
-🌐 Canlı Önizleme
-Projeyi internet üzerinden hemen incelemek için:
+# Quran Memorization & Arabic Text Analysis
 
-👉 Canlı Siteye Git https://selimuysal.github.io/kuran-ezber/
+An interactive web application for Quran reading, memorization practice, Arabic text selection, adjustable audio playback, and optional AI-assisted linguistic analysis.
 
-Quranic Interactive Analysis & Audio Player Web App
+**[Live demo](https://selimuysal.github.io/kuran-ezber/)**
 
-Modern ve duyarlı bir web uygulaması olan bu proje; interaktif Kur’an okuma, kelime bazlı seçim, özelleştirilebilir ses oynatma kontrolleri ve Google Gemini AI destekli gelişmiş dilbilimsel analiz özellikleri sunar.
+## Features
 
-🌟 Proje Özellikleri
-📝 Gelişmiş Metin ve Kelime Seçimi (selection.js)
-Fareyle sürükleyerek kelime aralığı seçme (drag selection).
+- **Interactive text selection:** Select individual words or word ranges, with Shift-click and context-menu support.
+- **Audio controls:** Adjust playback speed, use presets, and repeat audio segments.
+- **AI-assisted analysis:** Request Arabic word-group, root, and grammatical analysis using Google Gemini.
+- **Reading preferences:** Choose surahs, adjust Arabic font sizes, and customize the reading experience.
+- **Modular implementation:** Separated audio, UI, service, and application-state modules.
 
-Shift + Click ile iki kelime arasındaki aralığı seçme.
+## Tech Stack
 
-Sağ tık bağlam menüsü (context menu) desteği.
+- JavaScript (ES modules)
+- HTML and CSS
+- Google Gemini API integration
+- GitHub Pages hosting
 
-Ayet numarasına tıklayarak ayetin tamamını tek seferde seçebilme.
+## Repository Structure
 
-Boş alana tıklandığında (click-away) mevcut seçimi otomatik olarak temizleme.
+```text
+js/
+├── audio/       # Audio playback
+├── data/        # Surah metadata
+├── dom/         # DOM utilities
+├── services/    # External services and AI integration
+├── ui/          # Controls, text selection, and rendering
+├── config.js    # Configuration
+├── main.js      # Application entry point
+└── state.js     # Application state
+```
 
-🔊 Akıllı Ses ve Hız Kontrolleri (controls.js)
-0.5x ile 5.0x arasında dinamik oynatma hızı ayarı.
+## Run Locally
 
-Ön tanımlı hız butonları (preset buttons) ile hızlı geçiş.
+1. Clone the project:
 
-Oynatma hızı ile arayüzün senkronize edilmesi.
+   ```bash
+   git clone https://github.com/SelimUysal/kuran-ezber.git
+   cd kuran-ezber
+   ```
 
-Döngü (loop) sayacının takibi.
+2. Serve the project through a local web server (such as VS Code Live Server), then open the local address in your browser.
 
-🤖 Yapay Zekâ Destekli Derinlemesine Tahlil (geminiService.js & modal.js)
-Seçilen Arapça kelime gruplarını (terkipleri) Google Gemini modellerine yedekli olarak gönderme.
+3. AI features may require additional API configuration. **Never commit live API keys or other credentials to a public repository.** For production use, put secret API requests behind a secure backend rather than exposing keys in client-side JavaScript.
 
-Bütüncül terkip anlamı, kelime bazlı kök ve gramer yapısı, tefsir bağlamı ve nüzul sebebi gibi bilgileri JSON formatında alma.
+## Disclaimer
 
-Yapay zekâ tarafından oluşturulan analiz sonuçlarını modal penceresinde görselleştirme.
-
-Bir Gemini modelinde hata oluşması durumunda sonraki modele otomatik olarak geçme (fallback).
-
-📚 Dinamik Sûre ve Font Yönetimi (surahSelect.js & renderer.js)
-Sûre listesinin otomatik olarak oluşturulması.
-
-Fâtiha sûresine özel Besmele yönetimi ve temizliği (stripBismillah).
-
-Özelleştirilebilir Arapça yazı tipi stilleri.
-
-Dinamik Arapça font boyutu yönetimi (--arabic-word-size).
-
-📂 Mimari ve Modüler Yapı
-Proje, temiz kod (Clean Code) prensipleri gözetilerek ES6 modülleri şeklinde modüler bir yapıda tasarlanmıştır.
-src/
-│
-├── audio/
-│   └── player.js          # Ses oynatma ve hız yönetimi
-│
-├── dom/
-│   └── elements.js        # DOM seçicileri ve element referansları
-│
-├── ui/
-│   ├── controls.js        # Hız, font ve UI kontrol bağlantıları
-│   ├── modal.js           # Kelime tahlili ve AI modal arayüz yönetimi
-│   ├── renderer.js        # Ayet render etme, Besmele temizliği ve font yönetimi
-│   ├── selection.js       # Kelime seçim algoritmaları
-│   └── surahSelect.js     # Sûre listesi ve seçici yönetimi
-│
-├── services/
-│   └── geminiService.js   # Gemini AI API entegrasyonu ve prompt yönetimi
-│
-├── data/
-│   └── surahs.js          # Sûre meta verileri
-│
-├── state.js               # Global uygulama durumu (State)
-└── config.js              # API anahtarı ve endpoint yapılandırmaları
-
-🔄 Sistem Akışları
-1. Yapay Zekâ ile Kelime Tahlili
-Kullanıcı arayüzde bir veya birden fazla kelime seçip detaylar penceresini açtığında ve AI analizi istediğinde aşağıdaki süreç çalışır:
-sequenceDiagram
-    participant User as Kullanıcı
-    participant Modal as modal.js
-    participant Service as geminiService.js
-    participant Gemini as Google Gemini API
-
-    User->>Modal: Kelime/Terkip seç ve "AI Tahlil İste" butonuna tıkla
-    Modal->>Service: analyzeSelection(arabicText, translation, surahName)
-    Service->>Service: buildPrompt() ile akademik prompt oluştur
-    Service->>Gemini: HTTP POST (JSON Response Mode)
-
-    alt Başarılı Yanıt
-        Gemini-->>Service: JSON verisi (terkip, kelime analizi, tefsir, nüzul)
-        Service-->>Modal: Veriyi döndür
-        Modal->>User: Modal içeriğini güncelle (renderAIResult)
-    else Hata / Model Hatası
-        Gemini-->>Service: Hata / Timeout
-        Service->>Service: Sonraki modeli dene (Fallback)
-        Service-->>Modal: Hata mesajı göster (renderAIError)
-    end
-
-🚀 Kurulum ve Başlangıç
-1. Projeyi Klonlayın
-
-git clone https://github.com/kullanici-adi/proje-adi.git
-cd proje-adi
-
-2. Projeyi Çalıştırın
-Projeyi modern bir tarayıcıda veya Live Server gibi bir yerel geliştirme sunucusu üzerinden çalıştırabilirsiniz.
-
-🛠️ Kullanılan Teknolojiler
-Vanilla JavaScript — ES6 Modules
-
-Tailwind CSS — Dinamik sınıf yönetimi ve modern kullanıcı arayüzü
-
-Google Gemini API — Metin analizi ve filolojik/dilbilimsel tahlil
-
-GitHub Pages — Canlı yayınlama ve barındırma
-📌 Notlar
-Proje geliştirme sürecinde modülerlik, okunabilirlik ve sürdürülebilirlik ön planda tutulmuştur.
-
-AI tarafından üretilen dilbilimsel ve tefsir içerikleri yardımcı niteliktedir; akademik veya dinî çalışmalarda kullanılmadan önce güvenilir kaynaklarla ayrıca doğrulanmalıdır.
+AI-generated Arabic linguistic and interpretive explanations may contain errors. Verify important information against trusted references.
